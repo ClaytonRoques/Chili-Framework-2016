@@ -42,5 +42,13 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
+	int x = 400;
+	int y = 300;
+	int r = 255;
+	int g = 255;
+	int b = 255;
+
+	int velocityX = 0;
+	int velocityY = 0;
 	/********************************/
 };
