@@ -36,6 +36,7 @@ private:
 	void UpdateModel();
 	/********************************/
 	/*  User Functions              */
+	void DrawBox();
 	/********************************/
 private:
 	MainWindow& wnd;
@@ -44,11 +45,20 @@ private:
 	/*  User Variables              */
 	int x = 400;
 	int y = 300;
+	int xa = 200;
+	int ya = 500;
 	int r = 255;
 	int g = 255;
 	int b = 255;
+	int vx = 0;
+	int vy = 0;
+	bool shapeIsChanged = false;
+	bool inhibitUp = false;
+	bool inhibitDown = false;
+	bool inhibitLeft = false;
+	bool inhibitRight = false;
+	bool colorIsChanged = false;
+	bool colliding = false;
 
-	int velocityX = 0;
-	int velocityY = 0;
 	/********************************/
 };

@@ -39,53 +39,130 @@ void Game::Go()
 void Game::UpdateModel()
 {
 	// 800 x 600
+	if (wnd.kbd.KeyIsPressed(VK_RIGHT)) {
+		if (inhibitRight) {
 
-	x = x - velocityX;
-	y = y + velocityY;
+		}
+		else
+		{
+			vx = vx + 1;
+			inhibitRight = true;
+		}
+	}
 
+	else {
+		inhibitRight = false;
+	}
+
+	if (wnd.kbd.KeyIsPressed(VK_LEFT)) {
+		if (inhibitLeft) {
+
+		}
+		else
+		{
+			vx = vx - 1;
+			inhibitLeft = true;
+		}
+	}
+
+	else {
+		inhibitLeft = false;
+	}
+
+	if (wnd.kbd.KeyIsPressed(VK_DOWN)) {
+		if (inhibitDown) {
+
+		}
+		else
+		{
+			vy = vy + 1;
+			inhibitDown = true;
+		}
+	}
+
+	else {
+		inhibitDown = false;
+	}
+
+	if (wnd.kbd.KeyIsPressed(VK_UP)) {
+		if (inhibitUp) {
+
+		}
+		else
+		{
+			vy = vy - 1;
+			inhibitUp = true;
+		}
+	}
+
+	else {
+		inhibitUp = false;
+	}
+
+	x = x + vx;
+	y = y + vy;
+
+	if (x + 5 >= gfx.ScreenWidth) {
+		x = 799 - 6;
+		vx = 0;
+	}
+
+	if (x - 5 < 0) {
+		x = 5;
+		vx = 0;
+	}
+
+	if (y + 5 >= gfx.ScreenHeight) {
+		y = gfx.ScreenHeight - 6;
+		vy = 0;
+	}
+
+	if (y - 5 < 0) {
+		y = 5;
+		vy = 0;
+	}
 
 	if (wnd.kbd.KeyIsPressed(VK_F1)) {
 		r = 30;
 		g = 150;
 		b = 200;
 	}
-
-	if (wnd.kbd.KeyIsPressed(VK_LEFT)) {
-		velocityX = velocityX + 1;
+	else {
+		r = 255;
+		g = 255;
+		b = 255;
 	}
 
-	if (wnd.kbd.KeyIsPressed(VK_RIGHT)) {
-		velocityX = velocityX - 0.05;
-	}
+	shapeIsChanged = wnd.kbd.KeyIsPressed(VK_SHIFT);
 
-	if (wnd.kbd.KeyIsPressed(VK_UP)) {
-		velocityY = velocityY - 0.05;
-	}
+	// Determine if boxes are colliding
+	// Max x is 200 + 5, 205
+	// Min x is 200 - 5, 195
+	// Max y is 500 + 5, 505
+	// Min y is 500 - 5, 495
 
-	if (wnd.kbd.KeyIsPressed(VK_DOWN)) {
-		velocityY = velocityY + 0.05;
+	if (x - 5 <= xa + 5 && x + 5 >= xa - 5
+		&& y + 5 >= ya - 5 && y - 5 <= ya + 5) {
+		colliding = true;
+	}
+	else {
+		colliding = false;
 	}
 }
 
 void Game::ComposeFrame()
 {
-	if (x == 50) {
-		x = 400;
+	if (colliding) {
+		r = 30;
+		g = 150;
+		b = 200;
 	}
-
-	else if (x == 799) {
-
-	}
-
-	else if (y == 1) {
-
-	}
-
-	else if (y == 599) {
-
-	}
-
 	else {
+		r = 255;
+		g = 255;
+		b = 255;
+	}
+	if (shapeIsChanged) {
 		gfx.PutPixel(-5 + x, y, r, g, b);
 		gfx.PutPixel(-4 + x, y, r, g, b);
 		gfx.PutPixel(-3 + x, y, r, g, b);
@@ -99,4 +176,75 @@ void Game::ComposeFrame()
 		gfx.PutPixel(x, 4 + y, r, g, b);
 		gfx.PutPixel(x, 5 + y, r, g, b);
 	}
+
+	else {
+		gfx.PutPixel(-5 + x, -5 + y, r, g, b);
+		gfx.PutPixel(-5 + x, -4 + y, r, g, b);
+		gfx.PutPixel(-5 + x, -3 + y, r, g, b);
+		gfx.PutPixel(-4 + x, -5 + y, r, g, b);
+		gfx.PutPixel(-3 + x, -5 + y, r, g, b);
+		gfx.PutPixel(-5 + x, 5 + y, r, g, b);
+		gfx.PutPixel(-5 + x, 4 + y, r, g, b);
+		gfx.PutPixel(-5 + x, 3 + y, r, g, b);
+		gfx.PutPixel(-4 + x, 5 + y, r, g, b);
+		gfx.PutPixel(-3 + x, 5 + y, r, g, b);
+		gfx.PutPixel(5 + x, -5 + y, r, g, b);
+		gfx.PutPixel(5 + x, -4 + y, r, g, b);
+		gfx.PutPixel(5 + x, -3 + y, r, g, b);
+		gfx.PutPixel(4 + x, -5 + y, r, g, b);
+		gfx.PutPixel(3 + x, -5 + y, r, g, b);
+		gfx.PutPixel(5 + x, 5 + y, r, g, b);
+		gfx.PutPixel(5 + x, 4 + y, r, g, b);
+		gfx.PutPixel(5 + x, 3 + y, r, g, b);
+		gfx.PutPixel(4 + x, 5 + y, r, g, b);
+		gfx.PutPixel(3 + x, 5 + y, r, g, b);
+	}
+
+	gfx.PutPixel(-5 + xa, -5 + ya, r, g, b);
+	gfx.PutPixel(-5 + xa, -4 + ya, r, g, b);
+	gfx.PutPixel(-5 + xa, -3 + ya, r, g, b);
+	gfx.PutPixel(-4 + xa, -5 + ya, r, g, b);
+	gfx.PutPixel(-3 + xa, -5 + ya, r, g, b);
+	gfx.PutPixel(-5 + xa, 5 + ya, r, g, b);
+	gfx.PutPixel(-5 + xa, 4 + ya, r, g, b);
+	gfx.PutPixel(-5 + xa, 3 + ya, r, g, b);
+	gfx.PutPixel(-4 + xa, 5 + ya, r, g, b);
+	gfx.PutPixel(-3 + xa, 5 + ya, r, g, b);
+	gfx.PutPixel(5 + xa, -5 + ya, r, g, b);
+	gfx.PutPixel(5 + xa, -4 + ya, r, g, b);
+	gfx.PutPixel(5 + xa, -3 + ya, r, g, b);
+	gfx.PutPixel(4 + xa, -5 + ya, r, g, b);
+	gfx.PutPixel(3 + xa, -5 + ya, r, g, b);
+	gfx.PutPixel(5 + xa, 5 + ya, r, g, b);
+	gfx.PutPixel(5 + xa, 4 + ya, r, g, b);
+	gfx.PutPixel(5 + xa, 3 + ya, r, g, b);
+	gfx.PutPixel(4 + xa, 5 + ya, r, g, b);
+	gfx.PutPixel(3 + xa, 5 + ya, r, g, b);
+}
+
+void Game::DrawBox() {
+	const int r_fixed = 0;
+	const int g_fixed = 255;
+	const int b_fixed = 0;
+
+	gfx.PutPixel(-5 + xa, -5 + ya, r_fixed, g_fixed, b_fixed);
+	gfx.PutPixel(-5 + xa, -4 + ya, r_fixed, g_fixed, b_fixed);
+	gfx.PutPixel(-5 + xa, -3 + ya, r_fixed, g_fixed, b_fixed);
+	gfx.PutPixel(-4 + xa, -5 + ya, r_fixed, g_fixed, b_fixed);
+	gfx.PutPixel(-3 + xa, -5 + ya, r_fixed, g_fixed, b_fixed);
+	gfx.PutPixel(-5 + xa, 5 + ya, r_fixed, g_fixed, b_fixed);
+	gfx.PutPixel(-5 + xa, 4 + ya, r_fixed, g_fixed, b_fixed);
+	gfx.PutPixel(-5 + xa, 3 + ya, r_fixed, g_fixed, b_fixed);
+	gfx.PutPixel(-4 + xa, 5 + ya, r_fixed, g_fixed, b_fixed);
+	gfx.PutPixel(-3 + xa, 5 + ya, r_fixed, g_fixed, b_fixed);
+	gfx.PutPixel(5 + xa, -5 + ya, r_fixed, g_fixed, b_fixed);
+	gfx.PutPixel(5 + xa, -4 + ya, r_fixed, g_fixed, b_fixed);
+	gfx.PutPixel(5 + xa, -3 + ya, r_fixed, g_fixed, b_fixed);
+	gfx.PutPixel(4 + xa, -5 + ya, r_fixed, g_fixed, b_fixed);
+	gfx.PutPixel(3 + xa, -5 + ya, r_fixed, g_fixed, b_fixed);
+	gfx.PutPixel(5 + xa, 5 + ya, r_fixed, g_fixed, b_fixed);
+	gfx.PutPixel(5 + xa, 4 + ya, r_fixed, g_fixed, b_fixed);
+	gfx.PutPixel(5 + xa, 3 + ya, r_fixed, g_fixed, b_fixed);
+	gfx.PutPixel(4 + xa, 5 + ya, r_fixed, g_fixed, b_fixed);
+	gfx.PutPixel(3 + xa, 5 + ya, r_fixed, g_fixed, b_fixed);
 }
